@@ -12,13 +12,45 @@ This program is a Discord bot which is basically a mod to the real time messagin
 
 I ([@s0lst1ce](https://github.com/s0lst1ce)) started building this bot at the end of April 2019 using discord.py API. This bot was first made with the intent to make my discord server more powerful and alive. I had only created it a few days ago but I had realized that I would need additional tools to be able to fulfill all of the plans I had for this server. I had already started making a [bot](https://github.com/organic-bots/LazyFactorian) which serves as an interface to factorio's resources. I thus started building a bot that would enable me to easily manage a scalable server which would contain all of my future bots and would serve as a platform for all my creations.
 
-​	After the very first version I got some help of a friend of mine. Together we made the bot evolve so that it could join the ranks of other servers. Indeed I had started to realize that the bot, however simple, may be useful to others.
+​	After the very first version I got some help of a friend of mine. Together we made the bot evolve so that it could join the ranks of other servers. Indeed I had started to realize that the bot, however simple, may be useful to others. He built the the Todo extension. After that I kind of set back from the project.
 
-## Contributing
+​	After a month or two I got back to it with the idea to simplify the code base. The first thing on my list was the Config entry which was very hard to work with and hacky. So I built it in a more modular way so that it would be easier to maintain, expend, open up the way for i18n and ease expansion.
+
+​	Once that was done I pondered a while on how to re-word the help system. Failing to find a good solution I rather got on that task of implementing more functionalities, better document commands, fix bugs and enhance the look of the commands outputs. All this made the bot a much more robust product I am now proud to share.
+
+​	Still translations were still unsupported and the help system as unpractical. Because of this I forced myself to try both of these although I had no great idea on how to implement them. Translations were easier to introduce than I thought and I now have people working on actually writing them. As for the help system it has been enhanced already and more is on the way!
+
+## Contribution
 
 If you want to contribute that would be awesome ! We would love that :smile: !
 
 So to help you out, here are some tips to get you going: [CONTRIBUTING.md](https://github.com/s0lst1ce/ForeBot/blob/master/CONTRIBUTING.md).
+
+#### Contributors
+
+Here's an exhaustive list of the bot's contributors:
+
+- @adrienluitot : he has helped develop the bot since the beginning. His involvement ranges from giving opinions, shaping the future of the bot and some small snippets of code. He's also the author of the `Todo` extension, one of our biggest.
+- @s0lst1ce : author and owner of the bot. He has thought out and written most of the bot. What we currently call the bot is practically entirely due to him.
+- @BlueHolmesMan : author of the french translation.
+
+
+
+Thanks to all of you who've made this project be, kept it alive and as available as possible. We owe you everything!
+
+
+
+## Setup
+
+There are two options to setup the game depending on the OS you intend to run the bot on. If you use windows or MacOS you should just clone the repository and run it set it up using `python`. You should change the settings in `settings.py`.
+
+If however you choose to run the bot under Linux (recommended) you are advised to use the `deploy.sh` script. For this follow these instructions:
+
+- Download the script (ex: `wget https://raw.githubusercontent.com/s0lst1ce/Botanist/master/deploy.sh`).
+- Give it execution permissions (ex: `chmod +x deploy.sh`)
+- Run the script `./deploy.sh`
+
+To know how to use the script it is recommended to use `deploy.sh -h`. From there the process should be straightforward. This script is mean to expand as time goes.
 
 ## Commands
 
@@ -33,7 +65,7 @@ Here is an exhaustive list of all extensions and the commands they provide. This
 | Clearance     | Description                                                  |
 | ------------- | ------------------------------------------------------------ |
 | *             | this represents the wildcard and means everyone can use the command. No matter their roles |
-| runner        | this role is assigned to only one member: the one with the [`RUNNER_ID`](https://github.com/organic-bots/ForeBot/blob/master/settings.py#15). This is defined in the `settings.py` file and should represent the ID of the user responsible for the bot. It is also the only cross-server role. |
+| runner        | this role is assigned to only one member: the one with the [`RUNNER_ID`](https://github.com/s0lst1ce/Botanist/blob/dev/src/settings.py#L16). This is defined in the `settings.py` file and should represent the ID of the user responsible for the bot. It is also the only cross-server role. |
 | owner         | this role is automatically assigned to every server owner. It is however server-specific. It gives this member supremacy over all members in his/her server. |
 | administrator | this role gives access to all server commands except the bot configuration ones |
 | manager       | this role gives access to message management, warnings issues and other server moderation commands |
@@ -60,6 +92,7 @@ A suite of commands always activated which handle extension management. This can
 | `ext` |   `rm`   | `<extension>` | removes the  specified `extension` bot extension. If the command fails the bot will continue to run with the extension. | runner    |
 | `ext` | `reload` | `<extension>` | reloads the  specified `extension` bot extension. If the command fails the extension will stay unloaded | runner    |
 | `ext` |   `ls`   |               |  returns an embed with all the extensions and their status   | runner    |
+|       |  `help`  |   `[page]`    | initiates an interactive help session. If a `page` is supplied then it opens it only for this page and subpages. A page can be a cog, group or command. | *         |
 
 
 
@@ -67,9 +100,11 @@ A suite of commands always activated which handle extension management. This can
 
 This suite of commands provides automatic poll creation. A poll is an embed message sent by the bot to specified channels. Every user can react to the poll to show their opinion regarding the interrogation submitted by the poll. With each reaction, the poll's color will change to give everyone a quick visual feedback of all members' opinion. A poll is generated from a user's message. Currently it only supports messages from a `poll` channel. However it is planned to improve this to allow one to create a poll using a dedicated command. Same goes for poll editing which is yet unsupported. To palliate to this you can remove your poll if you consider it was malformed. Polls can also be deleted when reacting with the `:x:` emoji.
 
-| Group  | Command | Arguments  |                         Description                          | Clearance |
-| ------ | :-----: | :--------: | :----------------------------------------------------------: | --------- |
-| `poll` |  `rm`   | `<msg_id>` | if the user is the author of the poll with the `msg_id` message, the bot deletes the specified poll. | *         |
+| Group  |  Command   |            Arguments            |                         Description                          | Clearance |
+| ------ | :--------: | :-----------------------------: | :----------------------------------------------------------: | :-------: |
+| `poll` |    `rm`    |           `<msg_id>`            | If the user is the author of the poll with the `msg_id` message, the bot deletes the specified poll. |     *     |
+| `poll` |  `status`  |                                 | Returns stats about your active polls. This is also called when one of you poll gets deleted. |     *     |
+| `poll` | `extended` | `<description...> <choices...>` | This command creates polls that can have more than the 3 standard reaction but do not support dynamic color. The way to make one is to be write the following command in a poll channel (message discarded otherwise). The message is composed of the description then a line break then, one each following line: an emoji followed by a description each of these lines are separated by a line break |     *     |
 
 
 
@@ -127,10 +162,11 @@ Allows moderators to add and remove roles to members.
 
 Allows the owner of a server to configure the behavior of the bot.
 
-| Group | Command |   Arguments   |                         Description                          | Clearance |
-| ----- | :-----: | :-----------: | :----------------------------------------------------------: | --------- |
-|       | `init`  |               | starts full configuration of the bot in a new, restricted, channel | owner     |
-|       |  `chg`  | `<extension>` | **DEPRECATED** <br/>starts the configuration of the `extension` extension. This is done in a new, restricted, channel | owner     |
+| Group |  Command  |   Arguments   |                         Description                          |   Clearance   |
+| ----- | :-------: | :-----------: | :----------------------------------------------------------: | :-----------: |
+|       |  `init`   |               | starts full configuration of the bot in a new, restricted, channel |     owner     |
+|       |   `cfg`   | `<extension>` | starts the configuration of the `extension` extension. This is done in a new, restricted, channel | administrator |
+|       | `summary` |               | Returns an exhaustive description of all settings set in the current server | administrator |
 
 
 
@@ -139,10 +175,10 @@ Allows the owner of a server to configure the behavior of the bot.
 Allows the developers to update the bot and notify all server owners of the changes. It also facilitates bug fixing by providing an easy way to retrieve the log.
 
 | Group | Command  |   Arguments    |                         Description                          | Clearance |
-| :---: | :------: | :------------: | :----------------------------------------------------------: | --------- |
-|       | `update` | `[message...]` | sends an update message to all users who own a server of which the bot is a member. `message` will be transformed into the message sent to the server owners. A default message is sent if none is provided. This can be modified in `settings.py`. | owner     |
-|       |  `log`   |                |                  returns the bot's log file                  | owner     |
-|       |  `dev`   |                | sends the development server URL to the author of the message |           |
+| :---: | :------: | :------------: | :----------------------------------------------------------: | :-------: |
+|       | `update` | `[message...]` | sends an update message to all users who own a server of which the bot is a member. `message` will be transformed into the message sent to the server owners. A default message is sent if none is provided. This can be modified in `settings.py`. |  runner   |
+|       |  `log`   |                |                  returns the bot's log file                  |  runner   |
+|       |  `dev`   |                | sends the development server URL to the author of the message |     *     |
 
 
 
@@ -153,18 +189,3 @@ Gives several time-related commands to ease organization. For now this only incl
 | Group | Command  |       Arguments       |                         Description                          | Clearance |
 | ----- | :------: | :-------------------: | :----------------------------------------------------------: | --------- |
 |       | `remind` | `<date> [message...]` | returns the specified message after the specified amount of time. To precise the delay before sending the message use the following format: `1d15h6m1s` where `d` stands for days, `h` for hours, `m` for minutes and `s` for seconds. The numbers preceding them must be integers and represent the number of units to wait for (be it days, hours, minutes or seconds). All other words given as argument will form the message's content and will be sent in PM to the user after the specified delay has elapsed. | *         |
-
-
-
-#### Todo *In development* 
-
-Allows moderators to make a to-do list  in one or more channels. It's also possible to make types for the to-do's, to assign a member to a to-do and to make a copy of the to-do in a public or in a other channel. If the to-do is deleted the replica will also be deleted. For all the command where arguments are split with : `;` you must respect those.
-
-| Group  |   Command    |                          Arguments                           |                         Description                          | Clearance |
-| ------ | :----------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :-------: |
-| `todo` |    `add`     | `<to-do_content>` `<to-do_type>;<assigned member/false>` `<repost_channel/false>` | adds the to-do in the selected channel (see `todo channel` command) . A color will be used for the embeds if the to-do type exist. The member can be mention or just wrote normally, he will be mention in both case. The channel can be a mention or can be wrote manually, he will be write as mentioned is both case. |     *     |
-| `todo` | `removetype` |                        `<type_name>`                         |                       removes the type                       |     *     |
-| `todo` | `listtypes`  |                        `<type_name>`                         |                      list created types                      |     *     |
-| `todo` |  `addtype`   |                   `<type_name>` `<color>`                    |                  adds a type for the to-dos                  |     *     |
-| `todo` |  `channel`   |                                                              |          select the channel for the future to-do's           |     *     |
-
